@@ -158,4 +158,4 @@ modules.xml
 # End of https://www.gitignore.io/api/jupyternotebook
 
 gurobi.log
-*.pyomo.lpS
+*.pyomo.lp
