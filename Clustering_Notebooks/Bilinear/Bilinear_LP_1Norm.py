@@ -216,7 +216,7 @@ M2.SingularAssignmentBalance = Constraint(M2.PointsIndex, rule = SingularAssignm
 # In[34]:
 
 
-dat_file ="../Data/simpleTest.dat"
+dat_file ="../Data/LargeTest.dat"
 original_instance1 = M1.create_instance(dat_file)
 original_instance2 = M2.create_instance(dat_file)
 clusters = original_instance1.NumberOfClusters.value
@@ -244,16 +244,16 @@ current_instance2 = original_instance2.clone()
 seeding_A(current_instance1)
 count=0
 
-def end_condition(count):
-    if(count>3 and past_instance1 is not None and past_instance2 is not None):
-        if value(past_instance1.Distance)== value(current_instance1.Distance):
-            return True
-        if value(past_instance2.Distance)== value(current_instance2.Distance):
-            return True
-    return False
+while(True):
+    def end_condition(count, past_instance1, current_instance1, \
+                        past_instance2,current_instance2):
+        if(count>3 and past_instance1 is not None and past_instance2 is not None):
+            if value(past_instance1.Distance) == value(current_instance1.Distance):
+                return True
+            if value(past_instance2.Distance) == value(current_instance2.Distance):
+                return True
+        return False
 
-def solve_model_1(count):
-    count+=1
     Soln1 = Opt.solve(current_instance1)
     current_instance1.solutions.load_from(Soln1)
 
@@ -262,32 +262,65 @@ def solve_model_1(count):
     print("Termination Condition was "+str(Soln1.Solver.Termination_condition))
     display(current_instance1)
 
-    if end_condition(count):
-        return;
+    if end_condition(count, past_instance1,current_instance1, \
+                    past_instance2, current_instance2):
+        break;
     past_instance1 = current_instance1
     current_instance2 = original_instance2.clone()
     for j in range(1,clusters+1):
         for d in range(1,dimensions+1):
             current_instance2.Centroid[j,d]=current_instance1.Centroid[j,d]
-    solve_model_2(count)
-
-
-def solve_model_2(count):
     count+=1
     Soln2 = Opt.solve(current_instance2)
     current_instance2.solutions.load_from(Soln2)
-
-
     print("Current_instance 2: ", count)
     print("Termination Condition was "+str(Soln2.Solver.Termination_condition))
     display(current_instance2)
-    if end_condition(count):
-        return;
+    if end_condition(count, past_instance1,current_instance1, \
+                    past_instance2, current_instance2):
+        break;
     past_instance2 = current_instance2
     current_instance1 = original_instance1.clone()
     for i in range(1,points+1):
             for j in range(1,clusters+1):
                 current_instance1.Assignment[i,j]=current_instance2.Assignment[i,j]
-    solve_model_1(count)
+    count+=1
 
-solve_model_1(count)
+
+# def solve_model_1(count):
+#     count+=1
+#     Soln1 = Opt.solve(current_instance1)
+#     current_instance1.solutions.load_from(Soln1)
+#
+#     # Print the output
+#     print("Current_instance 1: ", count)
+#     print("Termination Condition was "+str(Soln1.Solver.Termination_condition))
+#     display(current_instance1)
+#
+#     if end_condition(count):
+#         return;
+#     past_instance1 = current_instance1
+#     current_instance2 = original_instance2.clone()
+#     for j in range(1,clusters+1):
+#         for d in range(1,dimensions+1):
+#             current_instance2.Centroid[j,d]=current_instance1.Centroid[j,d]
+#     solve_model_2(count)
+#
+#
+# def solve_model_2(count):
+#     count+=1
+#     Soln2 = Opt.solve(current_instance2)
+#     current_instance2.solutions.load_from(Soln2)
+#     print("Current_instance 2: ", count)
+#     print("Termination Condition was "+str(Soln2.Solver.Termination_condition))
+#     display(current_instance2)
+#     if end_condition(count):
+#         return;
+#     past_instance2 = current_instance2
+#     current_instance1 = original_instance1.clone()
+#     for i in range(1,points+1):
+#             for j in range(1,clusters+1):
+#                 current_instance1.Assignment[i,j]=current_instance2.Assignment[i,j]
+#     solve_model_1(count)
+
+# solve_model_1(count)
