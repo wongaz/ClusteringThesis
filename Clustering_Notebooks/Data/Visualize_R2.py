@@ -1,3 +1,4 @@
+# %load ../Visualize_R2.py
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,10 +8,13 @@ colors = np.array(['blue','green','red','violet','cyan',\
                     'magenta','yellow','black','orange'])
 marker_size = 75
 marker_alpha = 0.50
+csv =  ".csv"
+assignment = "_Assignment_INF_NORM.csv"
+centroid = "_Centroid_INF_NORM.csv"
 
-def make_R2_plot():
-    grouped = df_INF_NORM_MERGE.groupby('iteration')
-    centroids = df_INF_CENTROIDS.groupby('iteration')
+def make_R2_plot(df_merged,df_centroid):
+    grouped = df_merged.groupby('iteration')
+    centroids = df_centroid.groupby('iteration')
 
     ncols=2
     nrows = int(np.ceil(grouped.ngroups/ncols))
@@ -42,7 +46,27 @@ def load_file(points_file, assignment_file, centroid_file):
     df_CENTROIDS['index']= df_CENTROIDS['index'].astype('int')
 
     df_CENTROIDS['color'] = colors[df_CENTROIDS['index']]
-    df_MERGE = df_points.merge(df_ASSIGNMENTS,left_on = ['Index'],right_on=['P_i'])
+    df_MERGE = df_points.merge(df_ASSIGNMENTS,left_on = ['ID'],right_on=['P_i'])
+    df_MERGE['color'] = colors[df_MERGE['C_j']]
+
+    return (df_MERGE, df_CENTROIDS)
+
+def load_file_with_name(file):
+
+    df_points = pd.read_csv(file+csv)
+    df_ASSIGNMENTS =  pd.read_csv(file+assignment)
+    df_CENTROIDS =  pd.read_csv(file+centroid)
+    df_points = df_points.drop(['Unnamed: 0'], axis=1)
+
+
+    df_ASSIGNMENTS = df_ASSIGNMENTS.drop('Unnamed: 0',axis=1)
+    df_CENTROIDS = df_CENTROIDS.drop('Unnamed: 0',axis=1)
+
+    df_CENTROIDS['iteration']=df_CENTROIDS['iteration'].astype('int')
+    df_CENTROIDS['index']= df_CENTROIDS['index'].astype('int')
+
+    df_CENTROIDS['color'] = colors[df_CENTROIDS['index']]
+    df_MERGE = df_points.merge(df_ASSIGNMENTS,left_on = ['ID'],right_on=['P_i'])
     df_MERGE['color'] = colors[df_MERGE['C_j']]
 
     return (df_MERGE, df_CENTROIDS)
