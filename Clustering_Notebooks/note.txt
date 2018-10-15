@@ -1,0 +1,9 @@
+Fix INF-Norm Case.
+	Plots
+
+Reading
+	Weighted Clustering
+	Spectral Clustering
+	Meta-Heuristics
+		Simulated Annealing
+		Genetic
