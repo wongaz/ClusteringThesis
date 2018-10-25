@@ -74,8 +74,8 @@ def load_file_with_name_one(file,seeding):
     assignment = "_Assignment_1_NORM.csv"
     centroid = "_Centroid_1_NORM.csv"
     df_points = pd.read_csv(file+csv)
-    df_ASSIGNMENTS =  pd.read_csv(file+assignment)
-    df_CENTROIDS =  pd.read_csv(file+centroid)
+    df_ASSIGNMENTS =  pd.read_csv(file+seeding+assignment)
+    df_CENTROIDS =  pd.read_csv(file+seeding+centroid)
     df_points = df_points.drop(['Unnamed: 0'], axis=1)
 
 
