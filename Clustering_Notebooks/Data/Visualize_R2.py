@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-%matplotlib inline
+#%matplotlib inline
 
 colors = np.array(['blue','green','red','violet','cyan',\
                     'magenta','yellow','black','orange'])
