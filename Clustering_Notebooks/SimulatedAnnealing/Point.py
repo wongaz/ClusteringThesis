@@ -10,6 +10,10 @@ class Point(object):
     def __str__(self):
         return str(self.assignment)
 
+    def set_assignment(self,val):
+        self.assignment = val
+
+
     def set_next(self, val):
         if val!=self.assignment:
             self.next = val
