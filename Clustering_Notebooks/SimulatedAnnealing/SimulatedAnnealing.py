@@ -72,10 +72,22 @@ def naive_brute_force(POINTS_LIST):
                 nested(index+1, POINTS_LIST)
 
     nested(0, POINTS_LIST)
-    return best,best_assignment
+    return best, best_assignment
 
 
-def SA_Algorithm(POINTS_LIST):
+def additive_step_function(temper, step):
+    return temper-step
+
+
+def percent_step_function(temper, step):
+    return temper*(1-step)
+
+
+step_function = {"ADDITVE":additive_step_function,
+                 "PERCENT":percent_step_function}
+
+
+def sa_algorithm(POINTS_LIST):
     current_temp = MAX_TEMP
     minimization = calculate_score(POINTS_LIST,CLUSTERS)
 
@@ -98,18 +110,17 @@ def SA_Algorithm(POINTS_LIST):
             if score <= minimization or random_v < prob:
                 minimization = score
                 map(lambda x: POINTS_LIST[x].update(), modified)
-
             else:
                 map(lambda x: POINTS_LIST[x].reset(), modified)
 
-        current_temp-=TEMP_STEP_SIZE
+        current_temp -= TEMP_STEP_SIZE
 
     return minimization
 
 
 if __name__ == '__main__':
     conf = configparser.ConfigParser()
-    conf.read('config.ini')
+    conf.read('sa_sa_config.ini')
 
     DATA_FILE = str(conf['GENERAL']['DATA_FILE'])
     SEED = int(conf['GENERAL']['SEED'])
@@ -135,5 +146,5 @@ if __name__ == '__main__':
         initial = random.randint(1, CLUSTERS)
         p = Point(k, initial)
         POINTS_LIST.append(p)
-    print(naive_brute_force(POINTS_LIST))
-    #print(SA_Algorithm(POINTS_LIST))
+    #print(naive_brute_force(POINTS_LIST))
+    print(sa_algorithm(POINTS_LIST))

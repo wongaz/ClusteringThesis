@@ -1,5 +1,4 @@
 
-
 class Point(object):
     def __init__(self, dimension, assignment):
         self.dimension = dimension
@@ -9,12 +8,11 @@ class Point(object):
     def __str__(self):
         return str(self.assignment)
 
-    def set_assignment(self,val):
+    def set_assignment(self, val):
         self.assignment = val
 
-
     def set_next(self, val):
-        if val!=self.assignment:
+        if val != self.assignment:
             self.next = val
             return True
         return False
@@ -31,4 +29,9 @@ class Point(object):
         if self.next is None:
             return self.assignment
         return self.next
+
+
+class State(object):
+    def __init__(self, points):
+        self.points = points
 
