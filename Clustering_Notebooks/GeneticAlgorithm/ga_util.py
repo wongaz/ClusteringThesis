@@ -35,3 +35,10 @@ class State(object):
     def __init__(self, points):
         self.points = points
 
+    def crossover(self, other_state):
+        pass
+
+    def mutation(self):
+        pass
+
+

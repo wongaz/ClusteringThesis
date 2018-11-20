@@ -12,9 +12,8 @@ class Point(object):
     def set_assignment(self,val):
         self.assignment = val
 
-
     def set_next(self, val):
-        if val!=self.assignment:
+        if val != self.assignment:
             self.next = val
             return True
         return False
@@ -31,4 +30,7 @@ class Point(object):
         if self.next is None:
             return self.assignment
         return self.next
+
+    def clone(self):
+        return Point(self.dimension, self.assignment)
 

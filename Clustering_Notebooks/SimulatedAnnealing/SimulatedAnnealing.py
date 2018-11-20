@@ -102,10 +102,12 @@ def sa_algorithm(POINTS_LIST):
                     cj = random.randint(1, CLUSTERS)
 
             score = calculate_score(POINTS_LIST, CLUSTERS)
-            diff = score - minimization
-            prob = math.exp((-diff)/ round(current_temp, 10))
+            diff = abs(score - minimization)
+            prob = math.exp(-diff / round(current_temp, 10))
             random_v = random.random()
-            print(current_temp, modified, minimization, score, diff, prob, random_v)
+
+            if prob > 1:
+                print(current_temp, modified, minimization, score, diff, prob, random_v)
 
             if score <= minimization or random_v < prob:
                 minimization = score
@@ -120,7 +122,7 @@ def sa_algorithm(POINTS_LIST):
 
 if __name__ == '__main__':
     conf = configparser.ConfigParser()
-    conf.read('sa_sa_config.ini')
+    conf.read('sa_config.ini')
 
     DATA_FILE = str(conf['GENERAL']['DATA_FILE'])
     SEED = int(conf['GENERAL']['SEED'])
@@ -134,7 +136,6 @@ if __name__ == '__main__':
     TEMP_STEP_SIZE = float(conf['SA']['TEMP_STEP'])
     NUMBER_OF_SWAPS = int(conf['SA']['NUMBER_OF_SWAPS'])
     NUMBER_PER_ADJUSTMENT = int(conf['SA']['NUMBER_PER_ADJUSTMENT'])
-
 
     df = pd.read_csv(DATA_FILE)
     arr = df.values
