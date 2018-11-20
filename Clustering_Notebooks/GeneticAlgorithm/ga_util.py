@@ -1,3 +1,6 @@
+import random
+from collections import Counter
+
 
 class Point(object):
     def __init__(self, dimension, assignment):
@@ -33,12 +36,21 @@ class Point(object):
 
 class State(object):
     def __init__(self, points):
+        '''
+        Constructor for initializing the state
+        :param points: A collection of Points
+        '''
         self.points = points
 
     def crossover(self, other_state):
-        pass
+
+        return
 
     def mutation(self):
         pass
+
+    def selection(self):
+        pass
+
 
 

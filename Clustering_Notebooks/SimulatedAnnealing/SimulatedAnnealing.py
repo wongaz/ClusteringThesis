@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import configparser
+import copy
 from Point import *
 from collections import Counter
 import math
@@ -19,6 +20,7 @@ NUMBER_PER_ADJUSTMENT = None
 
 best = math.inf
 best_assignment = []
+
 
 def L_1(pi, cj):
     diff = np.absolute(np.subtract(pi, cj))
@@ -48,33 +50,6 @@ def calculate_score(POINTS_LIST, clusters):
     return total
 
 
-def naive_brute_force(POINTS_LIST):
-    def nested(index, points):
-        if index == POINTS:
-            array = [o.get_assignment() for o in POINTS_LIST]
-            #print(array)
-            counts = Counter(array)
-            for k in range(1, CLUSTERS+1):
-                #print(k, counts.get(k))
-                if counts.get(k) == 0 or counts.get(k) is None:
-                    return
-            score = calculate_score(POINTS_LIST, CLUSTERS)
-
-            global best, best_assignment
-            if score < best:
-                best = score
-                best_assignment = array
-                print(best,best_assignment)
-            return
-        else:
-            for k in range(1, CLUSTERS+1):
-                points[index].set_assignment(k)
-                nested(index+1, POINTS_LIST)
-
-    nested(0, POINTS_LIST)
-    return best, best_assignment
-
-
 def additive_step_function(temper, step):
     return temper-step
 
@@ -83,13 +58,14 @@ def percent_step_function(temper, step):
     return temper*(1-step)
 
 
-step_function = {"ADDITVE":additive_step_function,
-                 "PERCENT":percent_step_function}
+step_function = {"ADDITVE": additive_step_function,
+                 "PERCENT": percent_step_function}
 
 
 def sa_algorithm(POINTS_LIST):
     current_temp = MAX_TEMP
-    minimization = calculate_score(POINTS_LIST,CLUSTERS)
+    min_state = copy.deepcopy(POINTS_LIST)
+    minimization = calculate_score(min_state, CLUSTERS)
 
     while current_temp > .1:
         for _ in range(NUMBER_PER_ADJUSTMENT):
@@ -106,18 +82,22 @@ def sa_algorithm(POINTS_LIST):
             prob = math.exp(-diff / round(current_temp, 10))
             random_v = random.random()
 
-            if prob > 1:
-                print(current_temp, modified, minimization, score, diff, prob, random_v)
-
-            if score <= minimization or random_v < prob:
+            if score <= minimization:
                 minimization = score
                 map(lambda x: POINTS_LIST[x].update(), modified)
+                if score < calculate_score(min_state, CLUSTERS):
+                    min_state = copy.deepcopy(POINTS_LIST)
+
+            elif random_v < prob:
+                minimization = score
+                map(lambda x: POINTS_LIST[x].update(), modified)
+
             else:
                 map(lambda x: POINTS_LIST[x].reset(), modified)
 
         current_temp -= TEMP_STEP_SIZE
 
-    return minimization
+    return min_state, minimization
 
 
 if __name__ == '__main__':

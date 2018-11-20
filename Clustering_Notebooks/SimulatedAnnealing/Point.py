@@ -9,6 +9,9 @@ class Point(object):
     def __str__(self):
         return str(self.assignment)
 
+    def __repr__(self):
+        return '{},{}'.format(self.dimension, self.assignment)
+
     def set_assignment(self,val):
         self.assignment = val
 
