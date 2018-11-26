@@ -12,7 +12,7 @@ class Point(object):
     def __repr__(self):
         return '{},{}'.format(self.dimension, self.assignment)
 
-    def set_assignment(self,val):
+    def set_assignment(self, val):
         self.assignment = val
 
     def set_next(self, val):

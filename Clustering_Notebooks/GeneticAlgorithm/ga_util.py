@@ -1,5 +1,6 @@
+import numpy as np
 import random
-from collections import Counter
+import math
 
 
 class Point(object):
@@ -34,23 +35,71 @@ class Point(object):
         return self.next
 
 
+class Center(object):
+    def __init__(self, dimension, label):
+        self.dimension = dimension
+        self.original_id = label
+        self.consistent_id = None
+
+    def set_consistent_id(self, val):
+        self.consistent_id = val
+
+    def updated(self):
+        if self.consistent_id is not None and self.consistent_id != self.original_id:
+            return True
+        return False
+
+
 class State(object):
-    def __init__(self, points):
+    def __init__(self, points, distance_metric):
         '''
-        Constructor for initializing the state
-        :param points: A collection of Points
+
+        :param points:
+        :param distance_metric:
         '''
         self.points = points
+        self.centers = []
+        self.distance_metric = distance_metric
+        self.score = math.inf
 
-    def crossover(self, other_state):
+    def compute_centers(self):
+        if len(self.centers) == 0:
+            cluster_id = {point.get_assignment() for point in self.points}
+            for k in cluster_id:
+                ls = list(filter(lambda x: x.get_assignment() == k, self.points))
+                matrix = np.vstack(list(map(lambda x: x.dimension, ls)))
+                median = np.median(matrix, axis=0)
+                self.centers.append(Center(median, k))
 
+    def make_consistent(self, other_state):
+        if len(self.centers) == 0:
+            self.compute_centers()
+        if len(other_state.centers) == 0:
+            other_state.compute_centers()
+
+        distance_matrix = [[self.distance_metric(i.dimension, j.dimension) for i in other_state.centers]
+                           for j in self.centers]
+
+        possible_swaps = [x for x in range(len(distance_matrix))]
+        for k in range(len(distance_matrix)):
+            original_dist = distance_matrix[k]
+            candidate = [distance_matrix[k][x] for x in len(distance_matrix) if x in possible_swaps]
+            candidate.sort()
+            index = original_dist.index(candidate[0])
+            if index in possible_swaps:
+                possible_swaps.remove(index)
+
+    def selection(self, other_state):
+        self.make_consistent(other_state)
+
+    def crossover(self, other_state, k):
+        self.make_consistent(other_state)
         return
 
-    def mutation(self):
-        pass
+    def mutation(self, k):
+        return
 
-    def selection(self):
-        pass
+
 
 
 
