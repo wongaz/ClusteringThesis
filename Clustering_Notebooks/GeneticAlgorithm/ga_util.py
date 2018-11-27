@@ -130,7 +130,6 @@ class State(object):
             if self.points[k].assignment == other_state.points[k].assignment:
                 new_points[k].assignment = other_state.points[k].assignment
                 candidates.remove(k)
-        for candidate in candidates:
 
     def crossover(self, other_state, k):
         self.make_consistent(other_state)

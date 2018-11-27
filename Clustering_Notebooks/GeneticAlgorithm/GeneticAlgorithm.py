@@ -2,16 +2,17 @@ import configparser
 import random
 import pandas as pd
 from dist_util import distance_map
-from ga_util import *
+from maulnik_ga import *
 
 DISTANCE_MAP = distance_map()
 
-def GeneticAlgorithm():
+
+def GeneticAlgorithm(initial_state):
     pass
 
 if __name__ == '__main__':
     conf = configparser.ConfigParser()
-    conf.read('sa_config.ini')
+    conf.read('ga_config.ini')
 
     DATA_FILE = str(conf['GENERAL']['DATA_FILE'])
     SEED = int(conf['GENERAL']['SEED'])
@@ -29,12 +30,19 @@ if __name__ == '__main__':
     df = pd.read_csv(DATA_FILE)
     arr = df.values
 
-    DISTANCE = DISTANCE_METRICS[DISTANCE_METRIC]
+    max_value = arr.max()
+    min_value = arr.min()
 
     POINTS_LIST = []
     for k in arr:
         initial = random.randint(1, CLUSTERS)
-        p = Point(k, initial)
+        p = Point(k)
         POINTS_LIST.append(p)
+    cluster = []
+    for _ in range(CLUSTERS):
+        arr = []
+        for _ in range(DIMENSIONS):
+            arr += random.uniform(min_value,max_value)
+
     #print(naive_brute_force(POINTS_LIST))
-    print(ga_algorithm(POINTS_LIST))
+    print()
