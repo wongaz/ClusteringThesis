@@ -1,7 +1,6 @@
-
-
 class Point(object):
-    def __init__(self, dimension, assignment):
+    def __init__(self, id, dimension, assignment):
+        self.ID = id
         self.dimension = dimension
         self.assignment = assignment
         self.next = None
@@ -11,6 +10,14 @@ class Point(object):
 
     def __repr__(self):
         return '{},{}'.format(self.dimension, self.assignment)
+
+    def to_dict(self):
+        new_dict = dict()
+        new_dict.update({"ID": self.ID, "assignment": self.assignment})
+        for k in range(len(self.dimension)):
+            current_str = "x"+str(k+1)
+            new_dict.update({current_str: self.dimension[k]})
+        return new_dict
 
     def set_assignment(self, val):
         self.assignment = val

@@ -137,6 +137,7 @@ modules.xml
 # See https://github.com/joeblau/gitignore.io/issues/186 and https://github.com/joeblau/gitignore.io/issues/360
 */__pycache__/*
 /__pycache__/
+*/*/__pycache__/
 
 
 # Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-249601023
